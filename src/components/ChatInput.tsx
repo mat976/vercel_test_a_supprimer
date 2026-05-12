@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 
 const EMOJIS = ["😀","😂","😍","🥰","😎","🤔","😢","🔥","👍","❤️","🎉","💯","😭","🙏","💀","✨","👀","🤣","😅","🫶"];
+const MAX = 500;
 
 export default function ChatInput() {
   const [content, setContent] = useState("");
@@ -26,8 +27,12 @@ export default function ChatInput() {
     }
   }
 
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.value.length <= MAX) setContent(e.target.value);
+  }
+
   function addEmoji(emoji: string) {
-    setContent((prev) => prev + emoji);
+    setContent((prev) => prev.length < MAX ? prev + emoji : prev);
     inputRef.current?.focus();
   }
 
@@ -61,7 +66,8 @@ export default function ChatInput() {
           type="text"
           placeholder="Votre message ou coller un lien GIF..."
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={handleChange}
+          maxLength={MAX}
           className="flex-1 bg-gray-700 text-white placeholder-gray-400 px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
         />
         <button
@@ -73,9 +79,12 @@ export default function ChatInput() {
           <FaPaperPlane />
         </button>
       </form>
-      <p className="text-xs text-gray-500 mt-1 pl-8">
-        💡 Colle un lien .gif ou .jpg pour envoyer une image
-      </p>
+      <div className="flex items-center justify-between mt-1 pl-8 pr-1">
+        <p className="text-xs text-gray-500">💡 Colle un lien .gif ou .jpg pour envoyer une image</p>
+        <span className={`text-xs font-mono ${content.length >= MAX ? "text-red-400" : content.length >= MAX * 0.8 ? "text-yellow-400" : "text-gray-500"}`}>
+          {content.length}/{MAX}
+        </span>
+      </div>
     </div>
   );
 }

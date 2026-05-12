@@ -27,23 +27,23 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+      <div className="w-full max-w-md bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-700">
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🎉</div>
-          <h1 className="text-3xl font-bold text-gray-800">Créer un compte</h1>
-          <p className="text-gray-500 mt-1">Rejoins la discussion ! 🚀</p>
+          <h1 className="text-3xl font-bold text-white">Créer un compte</h1>
+          <p className="text-gray-400 mt-1">Rejoins la discussion ! 🚀</p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm flex items-center gap-2">
+          <div className="mb-4 p-3 bg-red-900/40 border border-red-500 rounded-lg text-red-400 text-sm flex items-center gap-2">
             <span>⚠️</span> {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               😊 Pseudo
             </label>
             <input
@@ -52,11 +52,11 @@ export default function RegisterPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+              className="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               📧 Email
             </label>
             <input
@@ -65,12 +65,12 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+              className="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              🔒 Mot de passe <span className="text-gray-400 font-normal">(min. 6 caractères)</span>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              🔒 Mot de passe <span className="text-gray-500 font-normal">(min. 6 caractères)</span>
             </label>
             <input
               type="password"
@@ -79,13 +79,13 @@ export default function RegisterPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+              className="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold rounded-xl transition flex items-center justify-center gap-2"
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-900 text-white font-semibold rounded-xl transition flex items-center justify-center gap-2"
           >
             {loading ? <PacmanLoader size={10} color="#fff" /> : "S'inscrire ✨"}
           </button>
@@ -93,7 +93,7 @@ export default function RegisterPage() {
 
         <p className="text-center text-sm text-gray-500 mt-6">
           Déjà un compte ?{" "}
-          <a href="/login" className="text-indigo-600 font-medium hover:underline">
+          <a href="/login" className="text-indigo-400 font-medium hover:text-indigo-300 hover:underline">
             Se connecter 👋
           </a>
         </p>
