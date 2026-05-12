@@ -4,10 +4,13 @@ import { authClient } from "@/lib/auth-client";
 import { useEffect, useRef, useState } from "react";
 import { FaArrowDown } from "react-icons/fa";
 import CardMessage from "./CardMessage";
+import PollCard from "./PollCard";
 import Message from "@/types/Message";
+import Poll from "@/types/Poll";
 
 export default function ChatMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [polls, setPolls] = useState<Poll[]>([]);
   const { data: session } = authClient.useSession();
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,29 +19,56 @@ export default function ChatMessages() {
   function handleScroll() {
     const el = containerRef.current;
     if (!el) return;
-    const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    setShowScroll(distFromBottom > 100);
+    setShowScroll(el.scrollHeight - el.scrollTop - el.clientHeight > 100);
   }
 
   function scrollToBottom() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
-  async function fetchMessages() {
-    const request = await fetch("/api/messages");
-    if (!request.ok) return;
-    const data = await request.json();
-    setMessages(data);
+  async function fetchAll() {
+    const [msgRes, pollRes] = await Promise.all([
+      fetch("/api/messages"),
+      fetch("/api/polls"),
+    ]);
+    if (msgRes.ok) setMessages(await msgRes.json());
+    if (pollRes.ok) setPolls(await pollRes.json());
   }
 
   useEffect(() => {
-    fetchMessages();
-    const interval = setInterval(fetchMessages, 3000);
+    fetchAll();
+    const interval = setInterval(fetchAll, 3000);
     return () => clearInterval(interval);
   }, []);
 
+  async function handleVote(pollId: string, optionIndex: number) {
+    await fetch("/api/polls", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pollId, optionIndex }),
+    });
+    fetchAll();
+  }
 
-  if (messages.length === 0) {
+  async function handleDeletePoll(pollId: string) {
+    await fetch("/api/polls", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pollId }),
+    });
+    fetchAll();
+  }
+
+  type FeedItem =
+    | { type: "message"; data: Message; createdAt: string }
+    | { type: "poll"; data: Poll; createdAt: string };
+
+  const feed: FeedItem[] = [
+    ...messages.map((m) => ({ type: "message" as const, data: m, createdAt: m.createdAt })),
+    ...polls.map((p) => ({ type: "poll" as const, data: p, createdAt: p.createdAt })),
+  ].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
+  if (feed.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center text-gray-400 gap-2">
         <span className="text-4xl">💬</span>
@@ -54,9 +84,20 @@ export default function ChatMessages() {
         onScroll={handleScroll}
         className="h-full overflow-y-auto overflow-x-hidden p-4 flex flex-col gap-3"
       >
-        {messages.map((m) => (
-          <CardMessage m={m} userId={session?.user.id} key={m._id} />
-        ))}
+        {feed.map((item) =>
+          item.type === "message" ? (
+            <CardMessage m={item.data} userId={session?.user.id} key={item.data._id} />
+          ) : (
+            <div key={item.data._id} className={`flex ${item.data.createdBy === session?.user.id ? "justify-end" : "justify-start"}`}>
+              <PollCard
+                poll={item.data}
+                userId={session?.user.id}
+                onVote={handleVote}
+                onDelete={handleDeletePoll}
+              />
+            </div>
+          )
+        )}
         <div ref={bottomRef} />
       </div>
       {showScroll && (

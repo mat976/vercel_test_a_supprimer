@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import GifPicker from "./GifPicker";
+import CreatePoll from "./CreatePoll";
 
 const EMOJIS = ["😀","😂","😍","🥰","😎","🤔","😢","🔥","👍","❤️","🎉","💯","😭","🙏","💀","✨","👀","🤣","😅","🫶"];
 const MAX = 500;
@@ -11,6 +12,7 @@ export default function ChatInput() {
   const [content, setContent] = useState("");
   const [showEmojis, setShowEmojis] = useState(false);
   const [showGifs, setShowGifs] = useState(false);
+  const [showPoll, setShowPoll] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function sendGif(url: string) {
@@ -64,6 +66,7 @@ export default function ChatInput() {
         </div>
       )}
       {showGifs && <GifPicker onSelect={sendGif} />}
+      {showPoll && <CreatePoll onClose={() => setShowPoll(false)} />}
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <button
           type="button"
@@ -75,11 +78,19 @@ export default function ChatInput() {
         </button>
         <button
           type="button"
-          onClick={() => { setShowGifs((v) => !v); setShowEmojis(false); }}
+          onClick={() => { setShowGifs((v) => !v); setShowEmojis(false); setShowPoll(false); }}
           className="text-xs font-bold px-2 py-1 bg-gray-700 hover:bg-indigo-600 rounded-lg transition"
           title="GIFs"
         >
           GIF
+        </button>
+        <button
+          type="button"
+          onClick={() => { setShowPoll((v) => !v); setShowEmojis(false); setShowGifs(false); }}
+          className="text-xs font-bold px-2 py-1 bg-gray-700 hover:bg-indigo-600 rounded-lg transition"
+          title="Sondage"
+        >
+          📊
         </button>
         <input
           ref={inputRef}
