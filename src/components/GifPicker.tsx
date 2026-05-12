@@ -2,12 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const GIPHY_KEY = process.env.NEXT_PUBLIC_GIPHY_API_KEY ?? "dc6zaTOxFJmzC";
-
 interface GifResult {
   id: string;
   images: { fixed_height_small: { url: string } };
-  url: string;
   title: string;
 }
 
@@ -19,10 +16,7 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
 
   async function search(q: string) {
     setLoading(true);
-    const endpoint = q.trim()
-      ? `https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_KEY}&q=${encodeURIComponent(q)}&limit=12&rating=g`
-      : `https://api.giphy.com/v1/gifs/trending?api_key=${GIPHY_KEY}&limit=12&rating=g`;
-    const res = await fetch(endpoint);
+    const res = await fetch(`/api/gifs?q=${encodeURIComponent(q)}`);
     const data = await res.json();
     setGifs(data.data ?? []);
     setLoading(false);
