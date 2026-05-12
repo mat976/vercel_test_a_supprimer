@@ -23,11 +23,16 @@ export default function ChatMessages() {
   }, []);
 
   if (messages.length === 0) {
-    return <div>Aucun Message.</div>;
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center text-gray-400 gap-2">
+        <span className="text-4xl">💬</span>
+        <p className="text-sm">Aucun message pour l&apos;instant. Sois le premier !</p>
+      </div>
+    );
   }
 
   return (
-    <div className="p-4 flex gap-4 flex-col">
+    <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
       {messages.map((m) => (
         <CardMessage m={m} userId={session?.user.id} key={m._id} />
       ))}
