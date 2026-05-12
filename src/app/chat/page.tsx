@@ -1,6 +1,7 @@
 import ChatInput from "@/components/ChatInput";
 import ChatMessages from "@/components/ChatMessages";
 import LogoutButton from "@/components/LogoutButton";
+import QuickReactions from "@/components/QuickReactions";
 
 export default function ChatPage() {
   return (
@@ -15,6 +16,7 @@ export default function ChatPage() {
         </div>
         <LogoutButton />
       </header>
+      <QuickReactions />
       <ChatMessages />
       <ChatInput />
     </div>
