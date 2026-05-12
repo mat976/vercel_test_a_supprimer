@@ -2,15 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 
-interface GifResult {
+interface TenorGif {
   id: string;
-  images: { fixed_height_small: { url: string } };
   title: string;
+  media_formats: { tinygif: { url: string }; gif: { url: string } };
 }
 
 export default function GifPicker({ onSelect }: { onSelect: (url: string) => void }) {
   const [query, setQuery] = useState("");
-  const [gifs, setGifs] = useState<GifResult[]>([]);
+  const [gifs, setGifs] = useState<TenorGif[]>([]);
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -18,7 +18,7 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
     setLoading(true);
     const res = await fetch(`/api/gifs?q=${encodeURIComponent(q)}`);
     const data = await res.json();
-    setGifs(data.data ?? []);
+    setGifs(data.results ?? []);
     setLoading(false);
   }
 
@@ -50,13 +50,13 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
             <button
               key={gif.id}
               type="button"
-              onClick={() => onSelect(gif.images.fixed_height_small.url)}
+              onClick={() => onSelect(gif.media_formats.gif.url)}
               className="rounded-lg overflow-hidden hover:scale-105 transition-transform"
               title={gif.title}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={gif.images.fixed_height_small.url}
+                src={gif.media_formats.tinygif.url}
                 alt={gif.title}
                 className="w-full h-16 object-cover"
               />
@@ -64,7 +64,7 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
           ))}
         </div>
       )}
-      <p className="text-xs text-gray-500 mt-1 text-right">Powered by GIPHY</p>
+      <p className="text-xs text-gray-500 mt-1 text-right">Powered by Tenor</p>
     </div>
   );
 }
