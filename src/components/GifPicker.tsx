@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from "react";
 interface TenorGif {
   id: string;
   title: string;
-  media_formats: { tinygif: { url: string }; gif: { url: string } };
+  content_description: string;
+  media_formats: { tinygif?: { url: string }; gif: { url: string } };
 }
 
 export default function GifPicker({ onSelect }: { onSelect: (url: string) => void }) {
@@ -52,12 +53,12 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
               type="button"
               onClick={() => onSelect(gif.media_formats.gif.url)}
               className="rounded-lg overflow-hidden hover:scale-105 transition-transform"
-              title={gif.title}
+              title={gif.content_description || gif.title}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={gif.media_formats.tinygif.url}
-                alt={gif.title}
+                src={(gif.media_formats.tinygif ?? gif.media_formats.gif).url}
+                alt={gif.content_description || gif.title}
                 className="w-full h-16 object-cover"
               />
             </button>
