@@ -59,7 +59,7 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
               <img
                 src={(gif.media_formats.tinygif ?? gif.media_formats.gif).url}
                 alt={gif.content_description || gif.title}
-                className="w-full h-32 object-cover"
+                className="w-full h-auto object-contain"
               />
             </button>
           ))}
