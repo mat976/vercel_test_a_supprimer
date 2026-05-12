@@ -7,12 +7,28 @@ function isGifUrl(text: string) {
   return /^https?:\/\/.+\.(gif|webp)(\?.*)?$/i.test(text.trim());
 }
 
+function isVideoUrl(text: string) {
+  return /^https?:\/\/.+\.mp4(\?.*)?$/i.test(text.trim());
+}
+
 function isImageUrl(text: string) {
   return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(text.trim());
 }
 
 function renderContent(content: string) {
   const trimmed = content.trim();
+  if (isVideoUrl(trimmed)) {
+    return (
+      <video
+        src={trimmed}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="max-w-xs max-h-60 rounded-xl"
+      />
+    );
+  }
   if (isImageUrl(trimmed)) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
@@ -71,7 +87,7 @@ export default function CardMessage({
     deleteMessage(m._id, userId);
   }
 
-  const isMedia = isImageUrl(m.content.trim());
+  const isMedia = isImageUrl(m.content.trim()) || isVideoUrl(m.content.trim());
 
   return (
     <div className={`flex flex-col gap-1 ${isOwn ? "items-end" : "items-start"}`}>
