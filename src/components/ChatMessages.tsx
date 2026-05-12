@@ -1,15 +1,13 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import CardMessage from "./CardMessage";
 import Message from "@/types/Message";
 
 export default function ChatMessages() {
   const [messages, setMessages] = useState<Message[]>([]);
   const { data: session } = authClient.useSession();
-  const bottomRef = useRef<HTMLDivElement>(null);
-
   async function fetchMessages() {
     const request = await fetch("/api/messages");
     if (!request.ok) return;
@@ -23,9 +21,6 @@ export default function ChatMessages() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
 
   if (messages.length === 0) {
     return (
@@ -41,7 +36,6 @@ export default function ChatMessages() {
       {messages.map((m) => (
         <CardMessage m={m} userId={session?.user.id} key={m._id} />
       ))}
-      <div ref={bottomRef} />
     </div>
   );
 }
