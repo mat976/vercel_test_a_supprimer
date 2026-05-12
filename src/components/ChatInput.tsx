@@ -48,9 +48,9 @@ export default function ChatInput() {
   }
 
   return (
-    <div className="border-t border-gray-700 bg-gray-800 px-4 py-3">
+    <div className="border-t border-white/10 bg-white/5 backdrop-blur-md px-4 py-3">
       {showEmojis && (
-        <div className="flex flex-wrap gap-1 mb-2 p-2 bg-gray-700 rounded-xl">
+        <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 mb-2 w-full">
           {EMOJIS.map((emoji) => (
             <button
               key={emoji}
@@ -88,7 +88,7 @@ export default function ChatInput() {
           value={content}
           onChange={handleChange}
           maxLength={MAX}
-          className="flex-1 bg-gray-700 text-white placeholder-gray-400 px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+          className="flex-1 bg-white/10 text-white placeholder-gray-400 px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-white/10 transition"
         />
         <button
           type="submit"
