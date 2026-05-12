@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
+import GifPicker from "./GifPicker";
 
 const EMOJIS = ["😀","😂","😍","🥰","😎","🤔","😢","🔥","👍","❤️","🎉","💯","😭","🙏","💀","✨","👀","🤣","😅","🫶"];
 const MAX = 500;
@@ -9,7 +10,17 @@ const MAX = 500;
 export default function ChatInput() {
   const [content, setContent] = useState("");
   const [showEmojis, setShowEmojis] = useState(false);
+  const [showGifs, setShowGifs] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  async function sendGif(url: string) {
+    setShowGifs(false);
+    await fetch("/api/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: url }),
+    });
+  }
 
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
@@ -52,14 +63,23 @@ export default function ChatInput() {
           ))}
         </div>
       )}
+      {showGifs && <GifPicker onSelect={sendGif} />}
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <button
           type="button"
-          onClick={() => setShowEmojis((v) => !v)}
+          onClick={() => { setShowEmojis((v) => !v); setShowGifs(false); }}
           className="text-2xl hover:scale-110 transition-transform"
           title="Emojis"
         >
           😊
+        </button>
+        <button
+          type="button"
+          onClick={() => { setShowGifs((v) => !v); setShowEmojis(false); }}
+          className="text-xs font-bold px-2 py-1 bg-gray-700 hover:bg-indigo-600 rounded-lg transition"
+          title="GIFs"
+        >
+          GIF
         </button>
         <input
           ref={inputRef}
