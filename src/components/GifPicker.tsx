@@ -46,7 +46,7 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
       {loading ? (
         <p className="text-center text-gray-400 text-xs py-2">Chargement...</p>
       ) : (
-        <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+        <div className="grid grid-cols-4 gap-1 max-h-64 overflow-y-auto">
           {gifs.map((gif) => (
             <button
               key={gif.id}
