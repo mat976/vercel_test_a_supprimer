@@ -46,7 +46,7 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
       {loading ? (
         <p className="text-center text-gray-400 text-xs py-2">Chargement...</p>
       ) : (
-        <div className="grid grid-cols-3 gap-1 max-h-48 overflow-y-auto">
+        <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
           {gifs.map((gif) => (
             <button
               key={gif.id}
@@ -59,7 +59,7 @@ export default function GifPicker({ onSelect }: { onSelect: (url: string) => voi
               <img
                 src={(gif.media_formats.tinygif ?? gif.media_formats.gif).url}
                 alt={gif.content_description || gif.title}
-                className="w-full h-16 object-cover"
+                className="w-full h-32 object-cover"
               />
             </button>
           ))}
