@@ -81,7 +81,7 @@ export default function CardMessage({
         </span>
       )}
       <div
-        className={`relative group max-w-xs px-4 py-2 rounded-2xl text-sm shadow-sm ${
+        className={`relative group max-w-xs w-fit break-words px-4 py-2 rounded-2xl text-sm shadow-sm ${
           isMedia ? "bg-transparent p-0" :
           isOwn
             ? "bg-indigo-600 text-white rounded-tr-none"
