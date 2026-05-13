@@ -32,7 +32,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/10 relative z-10">
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">💬</div>
-          <h1 className="text-3xl font-bold text-white">DiscussLike</h1>
+          <h1 className="text-3xl font-bold text-white">ProjectLike</h1>
           <p className="text-gray-400 mt-1">Bon retour parmi nous 👋</p>
         </div>
 

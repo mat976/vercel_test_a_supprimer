@@ -10,7 +10,7 @@ export default function ChatPage() {
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-lg shadow-md">💬</div>
           <div>
-            <h1 className="font-bold text-lg leading-none text-white">DiscussLike</h1>
+            <h1 className="font-bold text-lg leading-none text-white">ProjectLike</h1>
             <p className="text-xs text-green-400 flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-400 rounded-full inline-block"></span> Canal général</p>
           </div>
         </div>

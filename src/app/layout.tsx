@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DiscussLike 💬",
+  title: "ProjectLike 💬",
   description: "Application de discussion en temps réel",
 };
 
