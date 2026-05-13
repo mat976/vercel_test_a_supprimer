@@ -48,15 +48,13 @@ export default function PollBanner({ userId }: { userId: string | undefined }) {
   const [copied, setCopied] = useState(false);
   const [votersFor, setVotersFor] = useState<number | null>(null);
 
-  async function fetchPolls() {
-    const res = await fetch("/api/polls");
-    if (res.ok) setPolls(await res.json());
-  }
-
   useEffect(() => {
-    fetchPolls();
-    const id = setInterval(fetchPolls, 3000);
-    return () => clearInterval(id);
+    const es = new EventSource("/api/stream");
+    es.onmessage = (e) => {
+      const { polls: pls } = JSON.parse(e.data);
+      setPolls(pls);
+    };
+    return () => es.close();
   }, []);
 
   useEffect(() => {
@@ -69,7 +67,6 @@ export default function PollBanner({ userId }: { userId: string | undefined }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pollId, optionIndex }),
     });
-    fetchPolls();
   }
 
   async function handleStop(pollId: string) {
@@ -78,7 +75,6 @@ export default function PollBanner({ userId }: { userId: string | undefined }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pollId, close: true }),
     });
-    fetchPolls();
   }
 
   async function handleDelete(pollId: string) {
@@ -88,7 +84,6 @@ export default function PollBanner({ userId }: { userId: string | undefined }) {
       body: JSON.stringify({ pollId }),
     });
     setOpen(false);
-    fetchPolls();
   }
 
   function handleCopy(pollId: string, slug?: string) {

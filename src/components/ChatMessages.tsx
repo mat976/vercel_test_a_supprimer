@@ -27,23 +27,18 @@ export default function ChatMessages() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
-  async function fetchAll() {
-    const [msgRes, pollRes] = await Promise.all([
-      fetch("/api/messages"),
-      fetch("/api/polls"),
-    ]);
-    if (msgRes.ok) setMessages(await msgRes.json());
-    if (pollRes.ok) setPolls(await pollRes.json());
-    if (initialLoad.current) {
-      initialLoad.current = false;
-      setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "instant" }), 50);
-    }
-  }
-
   useEffect(() => {
-    fetchAll();
-    const interval = setInterval(fetchAll, 3000);
-    return () => clearInterval(interval);
+    const es = new EventSource("/api/stream");
+    es.onmessage = (e) => {
+      const { messages: msgs, polls: pls } = JSON.parse(e.data);
+      setMessages(msgs);
+      setPolls(pls);
+      if (initialLoad.current) {
+        initialLoad.current = false;
+        setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "instant" }), 50);
+      }
+    };
+    return () => es.close();
   }, []);
 
   async function handleVote(pollId: string, optionIndex: number) {
@@ -52,7 +47,6 @@ export default function ChatMessages() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pollId, optionIndex }),
     });
-    fetchAll();
   }
 
   async function handleDeletePoll(pollId: string) {
@@ -61,7 +55,6 @@ export default function ChatMessages() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ pollId }),
     });
-    fetchAll();
   }
 
   type FeedItem =
