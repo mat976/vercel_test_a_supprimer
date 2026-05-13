@@ -41,9 +41,6 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-
   const body = await request.json();
   const { pollId } = body;
   if (!pollId) return NextResponse.json({ error: "Données invalides" }, { status: 400 });
@@ -52,8 +49,10 @@ export async function PATCH(request: NextRequest) {
   const poll = await db.collection("polls").findOne({ _id: new ObjectId(pollId) });
   if (!poll) return NextResponse.json({ error: "Sondage introuvable" }, { status: 404 });
 
+  const session = await auth.api.getSession({ headers: await headers() });
+
   if (body.close === true) {
-    if (poll.createdBy !== session.user.id)
+    if (!session || poll.createdBy !== session.user.id)
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     await db.collection("polls").updateOne({ _id: new ObjectId(pollId) }, { $set: { isClosed: true } });
     return NextResponse.json({ success: true });
@@ -65,7 +64,19 @@ export async function PATCH(request: NextRequest) {
   if (poll.isClosed || (poll.endsAt && new Date() > new Date(poll.endsAt)))
     return NextResponse.json({ error: "Sondage fermé" }, { status: 403 });
 
-  const userId = session.user.id;
+  let userId: string;
+  if (poll.isPublic) {
+    if (session) {
+      userId = session.user.id;
+    } else {
+      const ip = request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "anonymous";
+      userId = `anon_${ip}`;
+    }
+  } else {
+    if (!session) return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
+    userId = session.user.id;
+  }
+
   const update: Record<string, unknown> = {};
   poll.options.forEach((_: unknown, i: number) => {
     update[`options.${i}.voters`] = poll.options[i].voters.filter((v: string) => v !== userId);
