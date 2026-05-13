@@ -60,21 +60,25 @@ export default function PollPage() {
           </div>
         )}
 
-        {poll && !notFound && (
-          <>
-            <PollCard
-              poll={poll}
-              userId={session?.user.id}
-              onVote={handleVote}
-              onDelete={handleDelete}
-              fullPage
-            />
-            {!poll.isPublic && !session && (
-              <p className="text-center text-amber-300 text-sm mt-4">
-                🔒 Connecte-toi pour voter sur ce sondage privé.
-              </p>
-            )}
-          </>
+        {poll && !notFound && !poll.isPublic && !session && (
+          <div className="bg-white/10 rounded-2xl p-8 text-center flex flex-col items-center gap-3">
+            <span className="text-4xl">🔒</span>
+            <p className="text-white font-semibold">Sondage privé</p>
+            <p className="text-gray-400 text-sm">Tu dois être connecté pour accéder à ce sondage.</p>
+            <a href="/login" className="mt-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-5 py-2 rounded-xl transition">
+              Se connecter
+            </a>
+          </div>
+        )}
+
+        {poll && !notFound && (poll.isPublic || session) && (
+          <PollCard
+            poll={poll}
+            userId={session?.user.id}
+            onVote={handleVote}
+            onDelete={handleDelete}
+            fullPage
+          />
         )}
 
         <div className="text-center mt-6">
