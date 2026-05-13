@@ -25,7 +25,7 @@ function renderContent(content: string) {
         loop
         muted
         playsInline
-        className="max-w-xs max-h-60 rounded-xl"
+        className="w-48 h-32 rounded-lg object-cover"
       />
     );
   }
@@ -35,7 +35,7 @@ function renderContent(content: string) {
       <img
         src={trimmed}
         alt="image"
-        className="max-w-xs max-h-60 rounded-xl object-cover"
+        className="w-48 h-32 object-cover rounded-lg"
       />
     );
   }
