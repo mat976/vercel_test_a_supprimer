@@ -35,7 +35,7 @@ export default function PollCard({ poll, userId, onVote, onDelete, fullPage = fa
         )}
       </div>
 
-      <div className={fullPage && poll.options.some(o => o.gif) ? "grid grid-cols-2 gap-3" : "flex flex-col gap-2"}>
+      <div className="flex flex-col gap-2">
         {poll.options.map((option, i) => {
           const pct = totalVotes > 0 ? Math.round((option.voters.length / totalVotes) * 100) : 0;
           const voted = userVote === i;
