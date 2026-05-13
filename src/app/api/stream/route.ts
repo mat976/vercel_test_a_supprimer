@@ -1,13 +1,9 @@
-import { auth } from "@/lib/auth";
 import { getDb } from "@/lib/mongodb";
-import { headers } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
-  const session = await auth.api.getSession({ headers: await headers() });
-  const pollFilter = session ? {} : { isPublic: true };
+export async function GET() {
   const db = await getDb();
 
   const encoder = new TextEncoder();
@@ -20,7 +16,7 @@ export async function GET(request: NextRequest) {
         try {
           const [messages, polls] = await Promise.all([
             db.collection("messages").find().toArray(),
-            db.collection("polls").find(pollFilter).toArray(),
+            db.collection("polls").find().toArray(),
           ]);
           const data = JSON.stringify({ messages, polls });
           controller.enqueue(encoder.encode(`data: ${data}\n\n`));

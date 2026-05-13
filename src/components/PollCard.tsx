@@ -14,6 +14,8 @@ export default function PollCard({ poll, userId, onVote, onDelete, fullPage = fa
   const userVote = poll.options.findIndex((o) => userId && o.voters.includes(userId));
   const isOwn = poll.createdBy === userId;
   const isClosed = poll.isClosed || (!!poll.endsAt && new Date() > new Date(poll.endsAt));
+  const hasVoted = userVote !== -1;
+  const showStats = !fullPage || isOwn || isClosed;
 
   return (
     <div className={`bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 w-full ${fullPage ? "" : "max-w-sm"}`}>
@@ -39,27 +41,36 @@ export default function PollCard({ poll, userId, onVote, onDelete, fullPage = fa
         {poll.options.map((option, i) => {
           const pct = totalVotes > 0 ? Math.round((option.voters.length / totalVotes) * 100) : 0;
           const voted = userVote === i;
+          const canClick = !isClosed && userId && (!fullPage || !hasVoted);
           return (
             <button
               key={i}
-              onClick={() => !isClosed && userId && onVote(poll._id, i)}
-              disabled={isClosed}
+              onClick={() => canClick && onVote(poll._id, i)}
+              disabled={!canClick}
               className={`relative w-full text-left rounded-xl text-sm font-medium overflow-hidden transition
-                ${voted ? "ring-2 ring-indigo-400" : "hover:bg-white/10"}
-                ${isClosed ? "cursor-default opacity-80" : ""}`}
+                ${voted ? "ring-2 ring-indigo-400" : canClick ? "hover:bg-white/10" : ""}
+                ${!canClick ? "cursor-default" : ""}`}
             >
               {option.gif && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={option.gif} alt="" className={fullPage ? "w-full object-cover rounded-t-xl" : "w-full h-20 object-cover rounded-t-xl"} />
               )}
               <div className="px-3 py-2">
-                <div
-                  className={`absolute inset-0 rounded-xl transition-all ${voted ? "bg-indigo-600/50" : "bg-white/5"}`}
-                  style={{ width: `${pct}%` }}
-                />
+                {showStats && (
+                  <div
+                    className={`absolute inset-0 rounded-xl transition-all ${voted ? "bg-indigo-600/50" : "bg-white/5"}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                )}
+                {!showStats && voted && (
+                  <div className="absolute inset-0 rounded-xl bg-indigo-600/50" />
+                )}
+                {!showStats && !voted && (
+                  <div className="absolute inset-0 rounded-xl bg-white/5" />
+                )}
                 <span className="relative z-10 flex justify-between">
                   <span>{voted ? "✅ " : ""}{option.text}</span>
-                  <span className="text-gray-300">{pct}% · {option.voters.length}</span>
+                  {showStats && <span className="text-gray-300">{pct}% · {option.voters.length}</span>}
                 </span>
               </div>
             </button>
@@ -67,7 +78,9 @@ export default function PollCard({ poll, userId, onVote, onDelete, fullPage = fa
         })}
       </div>
 
-      <p className="text-xs text-gray-400 mt-2 text-right">{totalVotes} vote{totalVotes !== 1 ? "s" : ""}</p>
+      {showStats && <p className="text-xs text-gray-400 mt-2 text-right">{totalVotes} vote{totalVotes !== 1 ? "s" : ""}</p>}
+      {!showStats && hasVoted && <p className="text-xs text-indigo-400 mt-2 text-right">✅ Réponse enregistrée</p>}
+      {!showStats && !hasVoted && <p className="text-xs text-gray-500 mt-2 text-right">Choisis une option pour voter</p>}
     </div>
   );
 }

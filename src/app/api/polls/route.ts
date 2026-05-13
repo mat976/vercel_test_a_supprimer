@@ -5,10 +5,8 @@ import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
-  const session = await auth.api.getSession({ headers: await headers() });
   const db = await getDb();
-  const filter = session ? {} : { isPublic: true };
-  const polls = await db.collection("polls").find(filter).toArray();
+  const polls = await db.collection("polls").find().toArray();
   return NextResponse.json(polls);
 }
 
