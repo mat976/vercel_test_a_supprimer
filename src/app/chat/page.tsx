@@ -1,7 +1,6 @@
 import ChatInput from "@/components/ChatInput";
 import ChatMessages from "@/components/ChatMessages";
 import LogoutButton from "@/components/LogoutButton";
-import QuickReactions from "@/components/QuickReactions";
 import PollBannerWrapper from "@/components/PollBannerWrapper";
 
 export default function ChatPage() {
@@ -18,7 +17,6 @@ export default function ChatPage() {
         <LogoutButton />
       </header>
       <PollBannerWrapper />
-      <QuickReactions />
       <ChatMessages />
       <ChatInput />
     </div>
