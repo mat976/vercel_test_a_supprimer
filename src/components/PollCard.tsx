@@ -1,6 +1,7 @@
 "use client";
 
 import Poll from "@/types/Poll";
+import { useState, useEffect } from "react";
 import { FaTrash } from "react-icons/fa";
 
 export default function PollCard({ poll, userId, onVote, onDelete, fullPage = false }: {
@@ -14,8 +15,30 @@ export default function PollCard({ poll, userId, onVote, onDelete, fullPage = fa
   const userVote = poll.options.findIndex((o) => userId && o.voters.includes(userId));
   const isOwn = poll.createdBy === userId;
   const isClosed = poll.isClosed || (!!poll.endsAt && new Date() > new Date(poll.endsAt));
-  const hasVoted = userVote !== -1;
-  const showStats = !fullPage || isOwn || isClosed;
+  const isLoggedIn = !!userId;
+
+  const lsKey = `voted_${poll._id}`;
+  const [anonVote, setAnonVote] = useState<number>(-1);
+  useEffect(() => {
+    if (!isLoggedIn && fullPage) {
+      const stored = localStorage.getItem(lsKey);
+      if (stored !== null) setAnonVote(Number(stored));
+    }
+  }, [isLoggedIn, fullPage, lsKey]);
+
+  const effectiveVote = isLoggedIn ? userVote : anonVote;
+  const hasVoted = effectiveVote !== -1;
+  const showStats = !fullPage || (isLoggedIn && isOwn) || isClosed;
+
+  function handleVoteClick(i: number) {
+    if (!fullPage || !hasVoted) {
+      if (!isLoggedIn && fullPage) {
+        localStorage.setItem(lsKey, String(i));
+        setAnonVote(i);
+      }
+      onVote(poll._id, i);
+    }
+  }
 
   return (
     <div className={`bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 w-full ${fullPage ? "" : "max-w-sm"}`}>
@@ -40,12 +63,12 @@ export default function PollCard({ poll, userId, onVote, onDelete, fullPage = fa
       <div className="flex flex-col gap-2">
         {poll.options.map((option, i) => {
           const pct = totalVotes > 0 ? Math.round((option.voters.length / totalVotes) * 100) : 0;
-          const voted = userVote === i;
-          const canClick = !isClosed && userId && (!fullPage || !hasVoted);
+          const voted = effectiveVote === i;
+          const canClick = !isClosed && (!fullPage || !hasVoted);
           return (
             <button
               key={i}
-              onClick={() => canClick && onVote(poll._id, i)}
+              onClick={() => canClick && handleVoteClick(i)}
               disabled={!canClick}
               className={`relative w-full text-left rounded-xl text-sm font-medium overflow-hidden transition
                 ${voted ? "ring-2 ring-indigo-400" : canClick ? "hover:bg-white/10" : ""}
