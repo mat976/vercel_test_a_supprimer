@@ -15,6 +15,7 @@ export default function ChatMessages() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showScroll, setShowScroll] = useState(false);
+  const initialLoad = useRef(true);
 
   function handleScroll() {
     const el = containerRef.current;
@@ -33,6 +34,10 @@ export default function ChatMessages() {
     ]);
     if (msgRes.ok) setMessages(await msgRes.json());
     if (pollRes.ok) setPolls(await pollRes.json());
+    if (initialLoad.current) {
+      initialLoad.current = false;
+      setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "instant" }), 50);
+    }
   }
 
   useEffect(() => {
