@@ -3,11 +3,12 @@
 import Poll from "@/types/Poll";
 import { FaTrash } from "react-icons/fa";
 
-export default function PollCard({ poll, userId, onVote, onDelete }: {
+export default function PollCard({ poll, userId, onVote, onDelete, fullPage = false }: {
   poll: Poll;
   userId: string | undefined;
   onVote: (pollId: string, optionIndex: number) => void;
   onDelete: (pollId: string) => void;
+  fullPage?: boolean;
 }) {
   const totalVotes = poll.options.reduce((sum, o) => sum + o.voters.length, 0);
   const userVote = poll.options.findIndex((o) => userId && o.voters.includes(userId));
@@ -15,7 +16,7 @@ export default function PollCard({ poll, userId, onVote, onDelete }: {
   const isClosed = poll.isClosed || (!!poll.endsAt && new Date() > new Date(poll.endsAt));
 
   return (
-    <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 w-full max-w-sm">
+    <div className={`bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 w-full ${fullPage ? "" : "max-w-sm"}`}>
       <div className="flex items-start justify-between mb-3 gap-2">
         <div>
           <div className="flex items-center gap-2">
@@ -34,7 +35,7 @@ export default function PollCard({ poll, userId, onVote, onDelete }: {
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className={fullPage && poll.options.some(o => o.gif) ? "grid grid-cols-2 gap-3" : "flex flex-col gap-2"}>
         {poll.options.map((option, i) => {
           const pct = totalVotes > 0 ? Math.round((option.voters.length / totalVotes) * 100) : 0;
           const voted = userVote === i;
@@ -49,7 +50,7 @@ export default function PollCard({ poll, userId, onVote, onDelete }: {
             >
               {option.gif && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={option.gif} alt="" className="w-full h-20 object-cover rounded-t-xl" />
+                <img src={option.gif} alt="" className={fullPage ? "w-full object-cover rounded-t-xl" : "w-full h-20 object-cover rounded-t-xl"} />
               )}
               <div className="px-3 py-2">
                 <div

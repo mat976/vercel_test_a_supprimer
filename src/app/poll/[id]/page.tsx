@@ -67,6 +67,7 @@ export default function PollPage() {
               userId={session?.user.id}
               onVote={handleVote}
               onDelete={handleDelete}
+              fullPage
             />
             {!poll.isPublic && !session && (
               <p className="text-center text-amber-300 text-sm mt-4">
