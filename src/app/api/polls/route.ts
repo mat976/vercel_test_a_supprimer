@@ -14,36 +14,58 @@ export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-  const { question, options } = await request.json();
+  const { question, options, isPublic, slug, durationMs } = await request.json();
   if (!question || !options || options.length < 2)
     return NextResponse.json({ error: "Données invalides" }, { status: 400 });
 
   const db = await getDb();
+
+  if (slug) {
+    const existing = await db.collection("polls").findOne({ slug });
+    if (existing) return NextResponse.json({ error: "Ce slug est déjà utilisé" }, { status: 409 });
+  }
+
   const poll = {
     question,
-    options: options.map((text: string) => ({ text, voters: [] })),
+    options: options.map((o: { text: string; gif?: string }) => ({ text: o.text, gif: o.gif ?? null, voters: [] })),
     createdBy: session.user.id,
     createdByName: session.user.name,
     createdAt: new Date(),
+    isPublic: !!isPublic,
+    slug: slug?.trim() || null,
+    endsAt: durationMs ? new Date(Date.now() + durationMs) : null,
+    isClosed: false,
   };
-  await db.collection("polls").insertOne(poll);
-  return NextResponse.json(poll, { status: 201 });
+  const result = await db.collection("polls").insertOne(poll);
+  return NextResponse.json({ ...poll, _id: result.insertedId }, { status: 201 });
 }
 
 export async function PATCH(request: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
 
-  const { pollId, optionIndex } = await request.json();
-  if (!pollId || optionIndex === undefined)
-    return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+  const body = await request.json();
+  const { pollId } = body;
+  if (!pollId) return NextResponse.json({ error: "Données invalides" }, { status: 400 });
 
   const db = await getDb();
   const poll = await db.collection("polls").findOne({ _id: new ObjectId(pollId) });
   if (!poll) return NextResponse.json({ error: "Sondage introuvable" }, { status: 404 });
 
-  const userId = session.user.id;
+  if (body.close === true) {
+    if (poll.createdBy !== session.user.id)
+      return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+    await db.collection("polls").updateOne({ _id: new ObjectId(pollId) }, { $set: { isClosed: true } });
+    return NextResponse.json({ success: true });
+  }
 
+  const { optionIndex } = body;
+  if (optionIndex === undefined) return NextResponse.json({ error: "Données invalides" }, { status: 400 });
+
+  if (poll.isClosed || (poll.endsAt && new Date() > new Date(poll.endsAt)))
+    return NextResponse.json({ error: "Sondage fermé" }, { status: 403 });
+
+  const userId = session.user.id;
   const update: Record<string, unknown> = {};
   poll.options.forEach((_: unknown, i: number) => {
     update[`options.${i}.voters`] = poll.options[i].voters.filter((v: string) => v !== userId);

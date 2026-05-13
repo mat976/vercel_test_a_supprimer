@@ -50,6 +50,8 @@ export default function ChatInput() {
   }
 
   return (
+    <>
+      {showPoll && <CreatePoll onClose={() => setShowPoll(false)} />}
     <div className="border-t border-white/10 bg-white/5 backdrop-blur-md px-4 py-3">
       {showEmojis && (
         <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 mb-2 w-full">
@@ -66,7 +68,6 @@ export default function ChatInput() {
         </div>
       )}
       {showGifs && <GifPicker onSelect={sendGif} />}
-      {showPoll && <CreatePoll onClose={() => setShowPoll(false)} />}
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
         <button
           type="button"
@@ -117,5 +118,6 @@ export default function ChatInput() {
         </span>
       </div>
     </div>
+    </>
   );
 }
