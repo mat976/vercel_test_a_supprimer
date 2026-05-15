@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { PacmanLoader } from "react-spinners";
 
@@ -11,6 +11,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/boutique";
 
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
@@ -27,7 +29,7 @@ export default function LoginPage() {
       setError("Email ou mot de passe incorrect.");
       setLoading(false);
     } else {
-      router.push("/chat");
+      router.push(redirectTo);
     }
   }
 

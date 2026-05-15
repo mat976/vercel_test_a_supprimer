@@ -27,7 +27,7 @@ export default function RegisterPage() {
     if (error) {
       setError(error.message ?? "Une erreur est survenue.");
     } else {
-      router.push("/chat");
+      router.push("/boutique");
     }
     setLoading(false);
   }
