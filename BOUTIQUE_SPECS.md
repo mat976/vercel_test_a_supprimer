@@ -69,59 +69,46 @@
 ### US-04 : Paiement Stripe (Must)
 
 ```gherkin
-Scénario : Paiement réussi d'une bougie
-  Étant donné que je suis connecté avec un compte validé
-  Et que j'ai une bougie "Vanille Coco" (20€) dans mon panier
-  Quand je clique sur "Procéder au paiement"
-  Et que je complète le formulaire Stripe avec une carte valide (4242 4242 4242 4242)
-  Alors je suis redirigé vers la page de confirmation
-  Et la bougie "Vanille Coco" est marquée comme "vendue" dans la base
-  Et mon panier est vidé
+Fonctionnalité : Paiement Stripe d'une bougie unique
 
-Scénario : Échec paiement carte refusée
-  Étant donné que je suis connecté avec un compte validé
-  Et que j'ai une bougie dans mon panier
-  Quand je clique sur "Procéder au paiement"
-  Et que je complète le formulaire Stripe avec une carte refusée (4000 0000 0000 0002)
-  Alors je reste sur la page panier
-  Et un message "Paiement refusé" s'affiche
-  Et la bougie reste disponible à l'achat
+  Scénario : Paiement réussi et mise à jour du stock
+    Étant donné que Clarel (artisane) a mis en vente une bougie "Sakura" à 25€
+    Et que Jerome (client) est connecté et a ajouté "Sakura" à son panier
+    Quand Jerome clique sur "Payer avec Stripe"
+    Et qu'il saisit la carte de test 4242 4242 4242 4242
+    Alors Jerome est redirigé vers /panier/success
+    Et la bougie "Sakura" est marquée "vendue" dans la base de données
+    Et le panier de Jerome est vidé automatiquement
 
-Scénario : Double achat simultané d'une bougie unique
-  Étant donné que je suis connecté et qu'une bougie "Rose" est disponible
-  Et qu'un autre utilisateur ajoute aussi cette bougie à son panier
-  Quand je finalise mon paiement Stripe avec succès
-  Alors l'autre utilisateur voit une erreur "Produit indisponible" à la validation de son panier
+  Scénario : Paiement refusé, stock inchangé
+    Étant donné que Jerome a une bougie "Lavande" dans son panier
+    Quand il tente de payer avec la carte refusée 4000 0000 0000 0002
+    Alors il reste sur la page /panier
+    Et un message rouge "Votre carte a été refusée" s'affiche
+    Et la bougie "Lavande" reste en statut "disponible"
+    Et son panier conserve l'article
 ```
 
 ### US-05 : Ajout de produit par Admin (Must)
 
 ```gherkin
-Scénario : Ajout réussi d'une nouvelle bougie
-  Étant donné que je suis connecté en tant qu'admin (isAdmin: true)
-  Et que je suis sur la page /admin/bougies
-  Quand je clique sur l'onglet "Ajouter"
-  Et que je remplis le formulaire avec :
-    | Nom | "Bougie Chocolat" |
-    | Description | "Arôme gourmand" |
-    | Prix | 25.00 |
-    | Stock ID | "BOUGIE-CHOC-001" |
-  Et que je clique sur "Ajouter au catalogue"
-  Alors la bougie apparaît dans l'inventaire avec le statut "Disponible"
-  Et elle est visible dans le catalogue boutique
+Fonctionnalité : Gestion du catalogue par l'artisane
 
-Scénario : Tentative d'ajout avec stock ID déjà existant
-  Étant donné que je suis connecté en tant qu'admin
-  Et qu'une bougie avec Stock ID "BOUGIE-001" existe déjà
-  Quand je tente d'ajouter une nouvelle bougie avec le même Stock ID
-  Alors un message "Cet identifiant de stock existe déjà" s'affiche
-  Et la création est bloquée
+  Scénario : Clarel ajoute une nouvelle bougie au catalogue
+    Étant donné que Clarel est connectée avec le statut admin
+    Et qu'elle est sur la page /admin/bougies
+    Quand elle clique sur "Ajouter une bougie"
+    Et qu'elle saisit "Matcha Thé Vert" comme nom
+    Et qu'elle met 28.00€ comme prix
+    Et qu'elle clique sur "Ajouter au catalogue"
+    Alors la bougie apparaît dans la liste avec le badge "Disponible"
+    Et elle est immédiatement visible sur la boutique publique
 
-Scénario : Accès admin refusé pour utilisateur standard
-  Étant donné que je suis connecté en tant qu'utilisateur standard (isAdmin: false)
-  Quand je tente d'accéder à /admin/bougies
-  Alors je suis redirigé vers /chat
-  Et un message "Accès non autorisé" s'affiche
+  Scénario : Accès refusé pour un client lambda
+    Étant donné que Jerome (client, isAdmin: false) est connecté
+    Quand il tente d'accéder directement à /admin/bougies via l'URL
+    Alors il est redirigé automatiquement vers /boutique
+    Et un toast "Accès réservé aux administrateurs" s'affiche
 ```
 
 ---
