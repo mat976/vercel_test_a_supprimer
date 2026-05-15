@@ -28,11 +28,21 @@ export default function BoutiquePage() {
       .then((data) => {
         setProducts(data);
         setLoading(false);
+        
+        // Charger le panier depuis localStorage et nettoyer les produits supprimés
+        const saved = localStorage.getItem("cart");
+        if (saved) {
+          const cartIds = JSON.parse(saved);
+          // Vérifier que les produits du panier existent encore
+          const validIds = cartIds.filter((id: string) => 
+            data.some((p: Product) => p._id === id)
+          );
+          if (validIds.length !== cartIds.length) {
+            localStorage.setItem("cart", JSON.stringify(validIds));
+          }
+          setCart(validIds);
+        }
       });
-
-    // Charger le panier depuis localStorage
-    const saved = localStorage.getItem("cart");
-    if (saved) setCart(JSON.parse(saved));
   }, []);
 
   const cartCount = cart.length;

@@ -41,8 +41,16 @@ export default function PanierPage() {
     const res = await fetch("/api/products");
     const allProducts = await res.json();
     
-    // Filtrer ceux qui sont dans le panier
+    // Filtrer ceux qui sont dans le panier ET existent encore
     const cartProducts = allProducts.filter((p: Product) => ids.includes(p._id));
+    
+    // Nettoyer le panier des produits qui n'existent plus
+    const validIds = cartProducts.map((p: Product) => p._id);
+    if (validIds.length !== ids.length) {
+      setCart(validIds);
+      localStorage.setItem("cart", JSON.stringify(validIds));
+    }
+    
     setProducts(cartProducts);
     setLoading(false);
   }
