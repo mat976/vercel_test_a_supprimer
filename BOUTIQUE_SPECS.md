@@ -2,16 +2,15 @@
 
 ## 1. Reformulation du besoin client
 
-**Le client souhaite** intégrer un module de vente en ligne de bougies artisanales en stock unitaire au sein de l'application ProjectLike existante, avec un tunnel d'achat simplifié et une gestion de stock administrateur.
+**Sarah souhaite** vendre ses 20 bougies artisanales uniques directement depuis son application de discussion ProjectLike, sans passer par une marketplace tierce qui ponctionne ses marges. Elle a besoin d'un catalogue public, d'un tunnel de paiement Stripe simple, et d'un back-office pour gérer son stock sans formation technique.
 
-| Explicite | Implicite |
-|-----------|-----------|
-| • Vente de bougies artisanales (20 types) | • Conformité RGPD pour les paiements Stripe |
-| • Stock unitaire (pièces uniques) | • Sécurisation des routes admin |
-| • Paiement via Stripe | • Gestion des erreurs de paiement |
-| • Page admin pour ajouter/modifier produits | • Responsive mobile obligatoire |
-| • Redirection boutique après connexion | • Mise à jour temps réel du stock post-achat |
-| • Validation mot de passe 6 caractères min | • Protection contre double-achat simultané |
+| Explicite (ce qu'elle a dit) | Implicite (non dit mais nécessaire) |
+|------------------------------|-------------------------------------|
+| • Vente de 20 bougies pièces uniques | • Conformité RGPD (données clients + paiements) |
+| • Paiement Stripe intégré | • Sécurisation des routes admin (authentification renforcée) |
+| • Page admin pour ajouter/modifier produits | • Gestion des erreurs de paiement et remboursements |
+| • Redirection boutique après connexion | • Responsive mobile (son client cible est mobile-first) |
+| • Validation mot de passe 6 caractères | • Protection race condition (double achat simultané d'une même pièce) |
 
 ---
 
