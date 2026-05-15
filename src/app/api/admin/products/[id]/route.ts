@@ -6,10 +6,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 async function checkAdmin() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session || !(session.user as { isAdmin?: boolean }).isAdmin) {
-    return null;
+  if (!session?.user) return null;
+  
+  // Vérifier isAdmin dans la base (better-auth utilise collection "user")
+  const db = await getDb();
+  const collections = ["users", "user"];
+  
+  for (const coll of collections) {
+    const user = await db.collection(coll).findOne({ email: session.user.email });
+    if (user?.isAdmin) return session;
   }
-  return session;
+  
+  return null;
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
