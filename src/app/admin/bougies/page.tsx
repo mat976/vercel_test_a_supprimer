@@ -112,7 +112,7 @@ export default function AdminBougiesPage() {
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4 bg-white/5 backdrop-blur-md border-b border-white/10">
         <div className="flex items-center gap-4">
-          <Link href="/chat" className="text-gray-400 hover:text-white transition">
+          <Link href="/boutique" className="text-gray-400 hover:text-white transition">
             <FaArrowLeft size={18} />
           </Link>
           <h1 className="text-xl font-bold">🔧 Admin - Gestion des Bougies</h1>
