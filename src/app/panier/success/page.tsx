@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { FaCheckCircle, FaShoppingBag } from "react-icons/fa";
+import { PacmanLoader } from "react-spinners";
 
-export default function SuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [verified, setVerified] = useState(false);
@@ -50,5 +51,17 @@ export default function SuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]">
+        <PacmanLoader size={20} color="#6366f1" />
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }
