@@ -44,7 +44,11 @@ export async function POST(request: NextRequest) {
     quantity: 1,
   }));
   
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  // Détecter l'URL de base depuis les headers (pour supporter accès distant)
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost:3000";
+  const protocol = headersList.get("x-forwarded-proto") || "http";
+  const baseUrl = `${protocol}://${host}`;
   
   const checkoutSession = await stripe.checkout.sessions.create({
     mode: "payment",
