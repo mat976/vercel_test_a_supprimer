@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaCheckCircle, FaHome, FaShoppingBag } from "react-icons/fa";
+import { FaCheckCircle, FaShoppingBag } from "react-icons/fa";
 
 export default function SuccessPage() {
   const searchParams = useSearchParams();
@@ -46,14 +46,6 @@ export default function SuccessPage() {
           >
             <FaShoppingBag />
             Continuer mes achats
-          </Link>
-
-          <Link
-            href="/chat"
-            className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl transition"
-          >
-            <FaHome />
-            Retour au chat
           </Link>
         </div>
       </div>
