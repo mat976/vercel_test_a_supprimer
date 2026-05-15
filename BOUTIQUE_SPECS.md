@@ -2,7 +2,7 @@
 
 ## 1. Reformulation du besoin client
 
-**Sarah souhaite** vendre ses 20 bougies artisanales uniques directement depuis son application de discussion ProjectLike, sans passer par une marketplace tierce qui ponctionne ses marges. Elle a besoin d'un catalogue public, d'un tunnel de paiement Stripe simple, et d'un back-office pour gérer son stock sans formation technique.
+**Sarah souhaite** vendre ses 20 bougies artisanales uniques directement dans ProjectLike. Elle veut un catalogue public, un tunnel Stripe simple et un back-office sans formation technique. Les pièces sont uniques : pas de double-vente possible. L'enjeu : garder 100% de ses marges en évitant les marketplaces.
 
 | Explicite (ce qu'elle a dit) | Implicite (non dit mais nécessaire) |
 |------------------------------|-------------------------------------|
