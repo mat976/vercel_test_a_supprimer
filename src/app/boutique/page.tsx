@@ -3,7 +3,7 @@
 import Product from "@/types/Product";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { FaShoppingCart, FaUser, FaCog } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 
 export default function BoutiquePage() {
@@ -51,6 +51,12 @@ export default function BoutiquePage() {
               </span>
             )}
           </Link>
+          {session && (session.user as { isAdmin?: boolean }).isAdmin && (
+            <Link href="/admin/bougies" className="flex items-center gap-2 bg-red-600 hover:bg-red-500 px-4 py-2 rounded-xl transition">
+              <FaCog />
+              <span className="hidden sm:inline">Admin</span>
+            </Link>
+          )}
           {session ? (
             <Link href="/chat" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition">
               <FaUser />
