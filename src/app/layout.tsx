@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ProjectLike 💬",
-  description: "Application de discussion en temps réel",
+  title: "Camille Shop �️",
+  description: "Boutique de bougies artisanales",
 };
 
 export default function RootLayout({

@@ -7,6 +7,14 @@ import { FaArrowLeft, FaTrash, FaLock, FaCreditCard } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
+// Neumorphism pastel styles
+const bgColor = "bg-[#f0e6e6]";
+const textColor = "text-[#5a4a4a]";
+const softShadow = "shadow-[8px_8px_16px_#d1c4c4,-8px_-8px_16px_#ffffff]";
+const insetShadow = "shadow-[inset_4px_4px_8px_#d1c4c4,inset_-4px_-4px_8px_#ffffff]";
+const btnShadow = "shadow-[4px_4px_8px_#d1c4c4,-4px_-4px_8px_#ffffff]";
+const btnShadowHover = "hover:shadow-[inset_4px_4px_8px_#d1c4c4,inset_-4px_-4px_8px_#ffffff]";
+
 export default function PanierPage() {
   const router = useRouter();
   const [cart, setCart] = useState<string[]>([]);
@@ -88,60 +96,64 @@ export default function PanierPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]">
-        <p className="text-white">Chargement...</p>
+      <div className={`min-h-screen flex items-center justify-center ${bgColor}`}>
+        <div className={`w-16 h-16 rounded-full ${softShadow} flex items-center justify-center`}>
+          <div className="w-8 h-8 border-4 border-[#d4a5a5] border-t-transparent rounded-full animate-spin" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white/5 backdrop-blur-md border-b border-white/10">
+    <div className={`min-h-screen ${bgColor} ${textColor}`}>
+      {/* Header - Neumorphism */}
+      <header className={`flex items-center justify-between px-6 py-5 ${bgColor} shadow-[4px_4px_8px_#d1c4c4,-4px_-4px_8px_#ffffff]`}>
         <div className="flex items-center gap-4">
-          <Link href="/boutique" className="text-gray-400 hover:text-white transition">
+          <Link href="/boutique" className={`w-10 h-10 flex items-center justify-center rounded-xl ${bgColor} ${btnShadow} ${btnShadowHover} transition-all text-[#8b6b6b]`}>
             <FaArrowLeft size={18} />
           </Link>
-          <h1 className="text-xl font-bold">🛒 Mon Panier</h1>
+          <h1 className="text-xl font-bold text-[#8b6b6b]">🛒 Mon Panier</h1>
         </div>
       </header>
 
-      {/* Contenu */}
+      {/* Contenu - Neumorphism */}
       <main className="p-6 max-w-2xl mx-auto">
         {cart.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-400 text-lg">Votre panier est vide.</p>
-            <Link
-              href="/boutique"
-              className="inline-block mt-4 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl transition"
-            >
-              Découvrir les bougies →
-            </Link>
+          <div className="text-center py-16">
+            <div className={`inline-block p-8 rounded-3xl ${bgColor} ${softShadow}`}>
+              <p className="text-[#8b6b6b] text-lg">Votre panier est vide.</p>
+              <Link
+                href="/boutique"
+                className={`inline-block mt-4 px-6 py-3 rounded-xl ${bgColor} ${btnShadow} ${btnShadowHover} transition-all text-[#5a4a4a]`}
+              >
+                Découvrir les bougies →
+              </Link>
+            </div>
           </div>
         ) : (
           <>
-            {/* Liste des produits */}
+            {/* Liste des produits - Neumorphism */}
             <div className="space-y-4">
               {products.map((product) => (
                 <div
                   key={product._id}
-                  className="flex items-center gap-4 bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-4"
+                  className={`flex items-center gap-4 rounded-2xl p-4 ${bgColor} ${softShadow}`}
                 >
-                  <div className="w-20 h-20 bg-white/5 rounded-lg overflow-hidden shrink-0">
+                  <div className={`w-20 h-20 rounded-xl overflow-hidden shrink-0 ${bgColor} ${insetShadow}`}>
                     {product.image ? (
-                      <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                      <img src={product.image} alt={product.name} className="w-full h-full object-cover p-1 rounded-xl" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-2xl">🕯️</div>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold truncate">{product.name}</h3>
-                    <p className="text-indigo-300 font-bold">{(product.price / 100).toFixed(2)} €</p>
-                    <p className="text-gray-500 text-xs">Réf. {product.stockId}</p>
+                    <h3 className="font-semibold text-[#5a4a4a] truncate">{product.name}</h3>
+                    <p className="text-[#a08080] font-bold">{(product.price / 100).toFixed(2)} €</p>
+                    <p className="text-[#8b6b6b] text-xs">Réf. {product.stockId}</p>
                   </div>
                   <button
                     onClick={() => removeFromCart(product._id)}
-                    className="text-red-400 hover:text-red-300 p-2 transition"
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl text-[#c08080] ${bgColor} ${btnShadow} ${btnShadowHover} transition-all`}
                     title="Retirer"
                   >
                     <FaTrash />
@@ -150,15 +162,15 @@ export default function PanierPage() {
               ))}
             </div>
 
-            {/* Récapitulatif */}
-            <div className="mt-6 bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-6">
-              <div className="flex justify-between items-center text-lg mb-4">
+            {/* Récapitulatif - Neumorphism */}
+            <div className={`mt-6 rounded-3xl p-6 ${bgColor} ${softShadow}`}>
+              <div className="flex justify-between items-center text-lg mb-4 text-[#5a4a4a]">
                 <span>Total ({products.length} article{products.length > 1 ? "s" : ""})</span>
-                <span className="font-bold text-xl">{(total / 100).toFixed(2)} €</span>
+                <span className="font-bold text-2xl text-[#8b6b6b]">{(total / 100).toFixed(2)} €</span>
               </div>
 
               {!session && (
-                <div className="mb-4 p-3 bg-amber-500/20 border border-amber-500/30 rounded-lg text-amber-300 text-sm flex items-center gap-2">
+                <div className={`mb-4 p-3 rounded-xl text-sm flex items-center gap-2 ${bgColor} ${insetShadow} text-[#a08080]`}>
                   <FaLock />
                   Connectez-vous pour finaliser votre achat
                 </div>
@@ -167,7 +179,7 @@ export default function PanierPage() {
               <button
                 onClick={checkout}
                 disabled={checkingOut || products.length === 0}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-600 text-white px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition font-semibold"
+                className={`w-full px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition font-semibold ${checkingOut ? 'opacity-50 cursor-not-allowed' : ''} bg-[#a5d4c8] shadow-[4px_4px_8px_#84b0a5,-4px_-4px_8px_#c6f8ec] hover:shadow-[inset_4px_4px_8px_#84b0a5,inset_-4px_-4px_8px_#c6f8ec] text-[#5a4a4a]`}
               >
                 {checkingOut ? (
                   "Redirection vers Stripe..."
@@ -179,7 +191,7 @@ export default function PanierPage() {
                 )}
               </button>
 
-              <p className="text-center text-gray-500 text-xs mt-3">
+              <p className="text-center text-[#a08080] text-xs mt-3">
                 Paiement sécurisé via Stripe 🔒
               </p>
             </div>
