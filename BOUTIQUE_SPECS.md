@@ -2,7 +2,7 @@
 
 ## 1. Reformulation du besoin client
 
-**Sarah souhaite** vendre ses 20 bougies artisanales uniques en ligne. Elle veut un catalogue public, un tunnel Stripe simple et un back-office sans formation technique. Les pièces sont uniques : pas de double-vente possible. L'enjeu : garder 100% de ses marges en évitant les marketplaces.
+**Sarah souhaite** vendre ses 20 bougies artisanales uniques en ligne. Elle veut un catalogue public, un tunnel Stripe simple et un back-office sans formation technique. Contrairement à Instagram où plusieurs clients pouvaient réserver la même pièce, le système doit bloquer la double-vente. L'enjeu : garder 100% de ses marges en évitant les marketplaces.
 
 | Explicite (ce qu'elle a dit) | Implicite (non dit mais nécessaire) |
 |------------------------------|-------------------------------------|
