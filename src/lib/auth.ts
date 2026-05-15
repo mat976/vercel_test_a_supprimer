@@ -10,6 +10,13 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
+  trustedOrigins: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://10.21.0.79:3000",
+    "http://10.21.0.79:3001",
+    "https://project-e6x1l.vercel.app",
+  ],
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,
