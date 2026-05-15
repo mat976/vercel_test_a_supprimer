@@ -17,27 +17,27 @@
 
 ## 2. Personas
 
-### Persona 1 : "L'Amateur Découvreur"
+### Persona 1 : "L'Artisane Passionnée"
 | | |
 |---|---|
 | **Prénom** | Clarel |
-| **Âge** | 28 ans |
-| **Situation** | Étudiant en design, vit en coloc |
-| **Objectif** | Découvrir et acheter une bougie artisanale unique pour décorer son appart |
-| **Frustrations** | Les sites compliqués avec trop d'étapes, les stocks menteurs ("dispo" mais vendu) |
-| **Device** | Smartphone (90% du temps) |
-| **Usage** | Navigation mobile-first, achat impulsif, abandon si friction |
+| **Âge** | 32 ans |
+| **Situation** | Artisane bougière, crée des pièces uniques à la main dans son atelier |
+| **Objectif** | Vendre ses créations artisanales en ligne sans passer par des plateformes qui prennent trop de commission |
+| **Frustrations** | Les CMS complexes (WordPress), la double vente sur différentes plateformes, la gestion manuelle des stocks |
+| **Device** | Desktop/tablet (gestion atelier), occasionnellement mobile |
+| **Usage** | Power-user sur l'admin, besoin de clarté visuelle stock, met à jour son catalogue régulièrement |
 
-### Persona 2 : "La Créatrice Organisée"
+### Persona 2 : "Le Collectionneur Otaku"
 | | |
 |---|---|
 | **Prénom** | Jerome |
-| **Âge** | 35 ans |
-| **Situation** | Artisane bougière, gère son stock seule |
-| **Objectif** | Gérer son inventaire et suivre les ventes sans formation technique |
-| **Frustrations** | Les CMS complexes (WordPress), la double vente sur différentes plateformes |
-| **Device** | Desktop/tablet (gestion), occasionnellement mobile |
-| **Usage** | Power-user sur l'admin, besoin de clarté visuelle stock |
+| **Âge** | 26 ans |
+| **Situation** | Développeur de jeux gacha japonais, travaille en remote, fan de culture japonaise |
+| **Objectif** | Collectionner des bougies artisanales uniques avec des thématiques anime/nature pour son setup gaming |
+| **Frustrations** | Les sites compliqués avec trop d'étapes, les stocks menteurs ("dispo" mais vendu), les designs trop classiques |
+| **Device** | Smartphone (90% du temps), grand écran pour le gaming |
+| **Usage** | Navigation mobile-first, achat impulsif quand il voit un design unique, abandon si friction au paiement |
 
 ---
 
