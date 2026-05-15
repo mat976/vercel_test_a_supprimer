@@ -2,6 +2,7 @@ import ChatInput from "@/components/ChatInput";
 import ChatMessages from "@/components/ChatMessages";
 import LogoutButton from "@/components/LogoutButton";
 import PollBannerWrapper from "@/components/PollBannerWrapper";
+import Link from "next/link";
 
 export default function ChatPage() {
   return (
@@ -14,7 +15,15 @@ export default function ChatPage() {
             <p className="text-xs text-green-400 flex items-center gap-1"><span className="w-1.5 h-1.5 bg-green-400 rounded-full inline-block"></span> Canal général</p>
           </div>
         </div>
-        <LogoutButton />
+        <div className="flex items-center gap-2">
+          <Link
+            href="/boutique"
+            className="flex items-center gap-2 bg-amber-600/80 hover:bg-amber-500 text-white px-4 py-2 rounded-xl text-sm font-medium transition"
+          >
+            🕯️ Boutique
+          </Link>
+          <LogoutButton />
+        </div>
       </header>
       <PollBannerWrapper />
       <ChatMessages />
