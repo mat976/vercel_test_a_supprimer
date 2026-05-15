@@ -8,14 +8,17 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(request: NextRequest) {
+  // Vérifier session optionnelle (guest checkout accepté)
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) {
-    return NextResponse.json({ error: "Connexion requise" }, { status: 401 });
-  }
   
-  const { productIds } = await request.json();
+  const { productIds, email } = await request.json();
   if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
     return NextResponse.json({ error: "Panier vide" }, { status: 400 });
+  }
+  
+  // Pour les guests, email est requis
+  if (!session && (!email || !email.includes('@'))) {
+    return NextResponse.json({ error: "Email requis pour la confirmation" }, { status: 400 });
   }
   
   const db = await getDb();
@@ -55,9 +58,11 @@ export async function POST(request: NextRequest) {
     line_items: lineItems,
     success_url: `${baseUrl}/panier/success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${baseUrl}/panier`,
+    customer_email: session ? undefined : email, // Stripe envoie la confirmation à cet email
     metadata: {
       productIds: productIds.join(","),
-      userId: session.user.id,
+      userId: session?.user?.id || `guest_${email}`,
+      guestEmail: email || "",
     },
   });
   

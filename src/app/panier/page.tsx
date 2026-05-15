@@ -3,8 +3,7 @@
 import Product from "@/types/Product";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaArrowLeft, FaTrash, FaLock, FaCreditCard } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { FaArrowLeft, FaTrash, FaCreditCard } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 
 // Neumorphism pastel styles
@@ -16,11 +15,11 @@ const btnShadow = "shadow-[4px_4px_8px_#d1c4c4,-4px_-4px_8px_#ffffff]";
 const btnShadowHover = "hover:shadow-[inset_4px_4px_8px_#d1c4c4,inset_-4px_-4px_8px_#ffffff]";
 
 export default function PanierPage() {
-  const router = useRouter();
   const [cart, setCart] = useState<string[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingOut, setCheckingOut] = useState(false);
+  const [guestEmail, setGuestEmail] = useState("");
   const { data: session } = authClient.useSession();
 
   useEffect(() => {
@@ -71,16 +70,22 @@ export default function PanierPage() {
   }
 
   async function checkout() {
+    // Pour les guests, vérifier l'email
     if (!session) {
-      router.push("/login?redirect=/panier");
-      return;
+      if (!guestEmail || !guestEmail.includes('@')) {
+        alert("Veuillez entrer une adresse email valide pour recevoir la confirmation.");
+        return;
+      }
     }
 
     setCheckingOut(true);
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productIds: cart }),
+      body: JSON.stringify({ 
+        productIds: cart,
+        email: session ? undefined : guestEmail 
+      }),
     });
 
     const data = await res.json();
@@ -169,24 +174,37 @@ export default function PanierPage() {
                 <span className="font-bold text-2xl text-[#8b6b6b]">{(total / 100).toFixed(2)} €</span>
               </div>
 
+              {/* Email pour guests */}
               {!session && (
-                <div className={`mb-4 p-3 rounded-xl text-sm flex items-center gap-2 ${bgColor} ${insetShadow} text-[#a08080]`}>
-                  <FaLock />
-                  Connectez-vous pour finaliser votre achat
+                <div className="mb-4">
+                  <label className="block text-sm text-[#8b6b6b] mb-2">
+                    📧 Email pour la confirmation de commande *
+                  </label>
+                  <input
+                    type="email"
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                    placeholder="vous@exemple.com"
+                    className={`w-full rounded-xl px-4 py-3 text-[#5a4a4a] placeholder-[#a08080] focus:outline-none ${bgColor} ${insetShadow}`}
+                    required
+                  />
+                  <p className="text-xs text-[#a08080] mt-1">
+                    Votre reçu et confirmation seront envoyés à cette adresse.
+                  </p>
                 </div>
               )}
 
               <button
                 onClick={checkout}
-                disabled={checkingOut || products.length === 0}
-                className={`w-full px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition font-semibold ${checkingOut ? 'opacity-50 cursor-not-allowed' : ''} bg-[#a5d4c8] shadow-[4px_4px_8px_#84b0a5,-4px_-4px_8px_#c6f8ec] hover:shadow-[inset_4px_4px_8px_#84b0a5,inset_-4px_-4px_8px_#c6f8ec] text-[#5a4a4a]`}
+                disabled={checkingOut || products.length === 0 || (!session && !guestEmail)}
+                className={`w-full px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition font-semibold ${(checkingOut || (!session && !guestEmail)) ? 'opacity-50 cursor-not-allowed' : ''} bg-[#a5d4c8] shadow-[4px_4px_8px_#84b0a5,-4px_-4px_8px_#c6f8ec] hover:shadow-[inset_4px_4px_8px_#84b0a5,inset_-4px_-4px_8px_#c6f8ec] text-[#5a4a4a]`}
               >
                 {checkingOut ? (
                   "Redirection vers Stripe..."
                 ) : (
                   <>
                     <FaCreditCard />
-                    {session ? "Procéder au paiement" : "Se connecter et payer"}
+                    {session ? "Procéder au paiement" : "Payer sans compte"}
                   </>
                 )}
               </button>
