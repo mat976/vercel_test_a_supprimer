@@ -20,7 +20,7 @@
 ### Persona 1 : "L'Amateur Découvreur"
 | | |
 |---|---|
-| **Prénom** | Lucas |
+| **Prénom** | Clarel |
 | **Âge** | 28 ans |
 | **Situation** | Étudiant en design, vit en coloc |
 | **Objectif** | Découvrir et acheter une bougie artisanale unique pour décorer son appart |
@@ -31,7 +31,7 @@
 ### Persona 2 : "La Créatrice Organisée"
 | | |
 |---|---|
-| **Prénom** | Sarah |
+| **Prénom** | Jerome |
 | **Âge** | 35 ans |
 | **Situation** | Artisane bougière, gère son stock seule |
 | **Objectif** | Gérer son inventaire et suivre les ventes sans formation technique |
