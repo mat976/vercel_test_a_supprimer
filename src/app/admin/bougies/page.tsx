@@ -25,12 +25,24 @@ export default function AdminBougiesPage() {
   });
 
   useEffect(() => {
-    if (session && !(session.user as { isAdmin?: boolean }).isAdmin) {
+    checkAdminAndFetch();
+  }, [session, router]);
+
+  async function checkAdminAndFetch() {
+    if (!session) {
+      setLoading(false);
+      return;
+    }
+    
+    // Vérifier le statut admin via l'API
+    const adminCheck = await fetch("/api/admin/check");
+    if (!adminCheck.ok) {
       router.push("/chat");
       return;
     }
+    
     fetchProducts();
-  }, [session, router]);
+  }
 
   async function fetchProducts() {
     const res = await fetch("/api/admin/products");

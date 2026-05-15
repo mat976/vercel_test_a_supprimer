@@ -11,6 +11,15 @@ export default function BoutiquePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (session) {
+      fetch("/api/admin/check")
+        .then(r => r.ok ? setIsAdmin(true) : setIsAdmin(false))
+        .catch(() => setIsAdmin(false));
+    }
+  }, [session]);
 
   useEffect(() => {
     // Charger les produits
@@ -51,7 +60,7 @@ export default function BoutiquePage() {
               </span>
             )}
           </Link>
-          {session && (session.user as { isAdmin?: boolean }).isAdmin && (
+          {isAdmin && (
             <Link href="/admin/bougies" className="flex items-center gap-2 bg-red-600 hover:bg-red-500 px-4 py-2 rounded-xl transition">
               <FaCog />
               <span className="hidden sm:inline">Admin</span>
