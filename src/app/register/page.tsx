@@ -16,6 +16,12 @@ export default function RegisterPage() {
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     setError("");
+    
+    if (password.length < 6) {
+      setError("Le mot de passe doit contenir au moins 6 caractères.");
+      return;
+    }
+    
     setLoading(true);
     const { error } = await authClient.signUp.email({ name, email, password });
     if (error) {

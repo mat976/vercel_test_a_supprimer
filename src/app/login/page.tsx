@@ -15,6 +15,12 @@ export default function LoginPage() {
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     setError("");
+    
+    if (password.length < 6) {
+      setError("Le mot de passe doit contenir au moins 6 caractères.");
+      return;
+    }
+    
     setLoading(true);
     const { error } = await authClient.signIn.email({ email, password });
     if (error) {
@@ -66,8 +72,10 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={6}
               className="w-full px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
             />
+            <p className="text-xs text-gray-500 mt-1">Minimum 6 caractères</p>
           </div>
           <button
             type="submit"

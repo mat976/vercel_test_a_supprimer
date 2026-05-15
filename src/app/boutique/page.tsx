@@ -3,9 +3,11 @@
 import Product from "@/types/Product";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaShoppingCart, FaArrowLeft } from "react-icons/fa";
+import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { authClient } from "@/lib/auth-client";
 
 export default function BoutiquePage() {
+  const { data: session } = authClient.useSession();
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,21 +40,29 @@ export default function BoutiquePage() {
     <div className="min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white">
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-4 bg-white/5 backdrop-blur-md border-b border-white/10">
-        <div className="flex items-center gap-4">
-          <Link href="/chat" className="text-gray-400 hover:text-white transition">
-            <FaArrowLeft size={18} />
+        <h1 className="text-xl font-bold">🕯️ Boutique Bougies</h1>
+        <div className="flex items-center gap-3">
+          <Link href="/panier" className="relative flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-xl transition">
+            <FaShoppingCart />
+            <span>Panier</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </Link>
-          <h1 className="text-xl font-bold">🕯️ Boutique Bougies</h1>
-        </div>
-        <Link href="/panier" className="relative flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-xl transition">
-          <FaShoppingCart />
-          <span>Panier</span>
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-              {cartCount}
-            </span>
+          {session ? (
+            <Link href="/chat" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition">
+              <FaUser />
+              <span className="hidden sm:inline">{session.user.name}</span>
+            </Link>
+          ) : (
+            <Link href="/login?redirect=/boutique" className="flex items-center gap-2 bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded-xl transition">
+              <FaUser />
+              <span>Connexion</span>
+            </Link>
           )}
-        </Link>
+        </div>
       </header>
 
       {/* Catalogue */}
